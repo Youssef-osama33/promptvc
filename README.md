@@ -3,27 +3,41 @@
 <br/>
 
 ```
-██████╗ ██████╗  ██████╗ ███╗   ███╗██████╗ ████████╗██╗   ██╗ ██████╗
-██╔══██╗██╔══██╗██╔═══██╗████╗ ████║██╔══██╗╚══██╔══╝██║   ██║██╔════╝
-██████╔╝██████╔╝██║   ██║██╔████╔██║██████╔╝   ██║   ██║   ██║██║
-██╔═══╝ ██╔══██╗██║   ██║██║╚██╔╝██║██╔═══╝    ██║   ╚██╗ ██╔╝██║
-██║     ██║  ██║╚██████╔╝██║ ╚═╝ ██║██║        ██║    ╚████╔╝ ╚██████╗
-╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚═╝        ╚═╝     ╚═══╝   ╚═════╝
+ ____  ____  ____  __  __  ____  ____  _  _  ___
+(  _ \(  _ \(  _ \(  \/  )(  _ \(_  _)( \/ )/ __)
+ ) _/  )   / ) _ < )    (  ) __/  )(   \  /( (__
+(__)  (_)\_)(____/(_/\/\_)(__)   (__)   (__) \___)
 ```
 
-### *Because prompts deserve the same respect as code.*
+<h2>Version control for the age of LLMs.</h2>
+
+<p><i>Commit your prompts. Diff your thinking. Never lose what worked.</i></p>
 
 <br/>
 
-[![PyPI](https://img.shields.io/pypi/v/promptvc?color=blueviolet&style=for-the-badge&label=PyPI)](https://pypi.org/project/promptvc/)
-[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![PyPI](https://img.shields.io/pypi/v/promptvc?color=blueviolet&style=for-the-badge)](https://pypi.org/project/promptvc/)
+[![Python](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/yourusername/promptvc?style=for-the-badge&color=f59e0b)](https://github.com/yourusername/promptvc/stargazers)
+[![Stars](https://img.shields.io/github/stars/yourusername/promptvc?style=for-the-badge&color=f59e0b&label=⭐%20Stars)](https://github.com/yourusername/promptvc)
 
 <br/>
 
-> *"The difference between a prompt that works and one that doesn't is often a single word.*
-> *PromptVC makes sure you never lose the one that worked."*
+```bash
+pip install promptvc
+```
+
+<br/>
+
+<table>
+<tr>
+<td><a href="#-the-problem">The Problem</a></td>
+<td><a href="#-installation">Install</a></td>
+<td><a href="#-quick-start">Quick Start</a></td>
+<td><a href="#-commands">Commands</a></td>
+<td><a href="#-how-it-works">How It Works</a></td>
+<td><a href="#-philosophy">Philosophy</a></td>
+</tr>
+</table>
 
 <br/>
 
@@ -31,195 +45,192 @@
 
 ---
 
-## The Story
+## 💀 The Problem
 
-Every prompt engineer has felt it.
+You've been there.
 
-You spend two hours tuning a system prompt. You test it. It's perfect — it handles edge cases, it keeps the right tone, it does exactly what you need. You make one more small change. Deploy. Go to bed.
+You spend hours — sometimes days — tuning a prompt. Testing edge cases. Getting the tone right. Fixing the format. Watching it finally behave exactly the way you need it to. It's working. It's *really* working.
 
-Next morning, something is broken. The model is behaving strangely. You open your prompt file and stare at it, trying to remember what it looked like before.
+So you make one more small tweak. Just a word or two. You save the file.
+
+Then something breaks. The responses drift. The model ignores your instructions. You open the file and stare at it. You try to remember what it looked like before that last change.
 
 You can't.
 
-There's no history. No diff. No rollback. Just a blank cursor and the sinking feeling that the perfect version is gone forever.
-
-**PromptVC was built for that moment — before it happens.**
+There's no history. No rollback. No diff. Just you, a blank cursor, and the dawning horror that the version that worked — **is gone forever.**
 
 ---
 
-## What It Does
+This is not a niche problem. It happens to every prompt engineer, every AI team, every developer building on top of LLMs. Prompts are the most critical, most fragile, and most poorly managed artifact in the modern AI stack.
 
-PromptVC brings the discipline of Git to the world of LLM prompt engineering. It is a local-first, zero-dependency*, command-line tool that lets you version, diff, tag, and restore your prompts exactly the way you manage your source code.
+We have Git for code. We have Figma history for design. We have nothing for prompts.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│   promptvc commit summarizer prompt.txt -m "v1 — works"    │
-│   promptvc commit summarizer prompt.txt -m "v2 — testing"  │
-│   promptvc diff   summarizer <hash_1> <hash_2>             │
-│   promptvc checkout summarizer <hash_1>                    │
-│                                                             │
-│   Your prompts. Tracked forever. Locally.                  │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-*\*Only requires `click` for the CLI interface. Storage is plain SQLite.*
+**Until now.**
 
 ---
 
-## Installation
+## ✦ What Is PromptVC?
+
+PromptVC is a **local-first, Git-inspired version control system built exclusively for LLM prompts.**
+
+It gives you the same workflow discipline you use for code — commit, log, diff, checkout, tag — applied to the prompts that power your AI products.
+
+No cloud. No account. No SaaS. Just a clean CLI and a SQLite file that lives on your machine and preserves every version of every prompt you've ever written.
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                                                                     │
+│  $ promptvc commit gpt-summarizer prompt.txt -m "nailed the tone"  │
+│  ✓ Committed [a3f92c1b] nailed the tone                            │
+│                                                                     │
+│  $ promptvc diff gpt-summarizer a3f92c1b fcfeceb2                  │
+│  - Answer in 3 sentences max.                                       │
+│  + Be direct. 2 sentences. Return JSON.                             │
+│                                                                     │
+│  $ promptvc checkout gpt-summarizer a3f92c1b                       │
+│  ✓ Checked out [a3f92c1b] → gpt-summarizer.txt                     │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## ⚡ Installation
 
 ```bash
 pip install promptvc
 ```
 
-One command. No config files. No accounts. No cloud.
+Zero configuration. Works immediately. Your history is stored at `~/.promptvc/prompts.db` — a plain SQLite file you own completely.
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
+
+**In under 2 minutes, your prompts will be versioned forever.**
 
 ```bash
-# Step 1 — write your prompt
+# 1. Write your prompt
 echo "You are a helpful assistant. Answer in 3 sentences max." > prompt.txt
 
-# Step 2 — commit it
-promptvc commit summarizer prompt.txt -m "initial version" --model gpt-4
+# 2. Commit it — like Git, but for prompts
+promptvc commit summarizer prompt.txt -m "initial draft" --model gpt-4
 
-# Step 3 — make changes and commit again
-echo "You are a helpful assistant. Be direct. Max 2 sentences." > prompt.txt
-promptvc commit summarizer prompt.txt -m "tighter constraint" --model gpt-4
+# 3. Iterate
+echo "You are a helpful assistant. Be direct. Max 2 sentences. Return JSON." > prompt.txt
+promptvc commit summarizer prompt.txt -m "tighter + JSON output" --model gpt-4
 
-# Step 4 — see exactly what changed
+# 4. See exactly what changed between versions
 promptvc diff summarizer <hash_1> <hash_2>
 
-# Step 5 — something broke? go back.
+# 5. Something broke? Go back instantly.
 promptvc checkout summarizer <hash_1>
 ```
 
-You now have full version control over your prompt. It took 30 seconds.
+That's the whole loop. **Write → Commit → Iterate → Diff → Recover.**
 
 ---
 
-## Commands
+## 📖 Commands
 
-<details>
-<summary><b>📝 commit</b> — Save a new version of a prompt</summary>
-
-<br/>
+### `commit` — Preserve a version forever
 
 ```bash
-promptvc commit <name> <file> -m "message" [--model gpt-4] [--tags prod,stable]
+promptvc commit <prompt-name> <file> -m "your message" [--model gpt-4] [--tags prod,stable]
 ```
 
-| Flag | Required | Description |
-|---|---|---|
-| `-m` | ✅ Yes | Commit message |
-| `--model` | No | Target LLM model (default: `gpt-4`) |
-| `--tags` | No | Comma-separated labels |
+Think of this like `git commit`. Every time you reach a version worth keeping — commit it. You'll thank yourself later.
 
 ```bash
-# Examples
 promptvc commit summarizer prompt.txt -m "initial draft"
-promptvc commit chatbot system.txt -m "add persona" --model claude-3 --tags "prod"
+promptvc commit summarizer prompt.txt -m "add JSON constraint" --model gpt-4 --tags "prod"
+promptvc commit chatbot system.txt   -m "softer persona"   --model claude-3
 ```
 
-</details>
+---
 
-<details>
-<summary><b>📜 log</b> — View full commit history</summary>
-
-<br/>
+### `log` — See the full story of a prompt
 
 ```bash
-promptvc log <name>
+promptvc log <prompt-name>
 ```
 
 ```
 commit a3f92c1b9e4d2f7a8c3b1e6d9f0a2c5b
 Model:   gpt-4
-Date:    2024-03-12T10:30:00
-Tags:    prod, stable
+Date:    2024-03-14T11:00:00
+Tags:    prod
 
-    tighter constraint
+    tighter + JSON output
 
 commit 31e0e29bfd18a7c43d85f920b1c6e471
 Model:   gpt-4
-Date:    2024-03-10T08:15:00
+Date:    2024-03-12T09:30:00
 
-    initial version
+    initial draft
 ```
 
-</details>
+Every decision, recorded. Every message a breadcrumb back to what you were thinking.
 
-<details>
-<summary><b>🔍 diff</b> — Compare any two versions</summary>
+---
 
-<br/>
+### `diff` — See exactly what changed
 
 ```bash
-promptvc diff <name> <hash_a> <hash_b>
+promptvc diff <prompt-name> <hash_a> <hash_b>
 ```
 
 ```diff
---- version a3f92c1b
-+++ version fcfeceb2
+--- version 31e0e29b  (initial draft)
++++ version a3f92c1b  (tighter + JSON output)
 
   You are a helpful assistant.
 - Answer in 3 sentences max.
 + Be direct. Max 2 sentences.
-+ Always respond in JSON.
++ Always return a JSON object with a single "answer" key.
 
   +2 lines  -1 lines  1 unchanged
 ```
 
-</details>
+This is the feature that changes everything. Seeing the *exact* difference between a prompt that worked and one that didn't is how prompt engineering stops being guesswork.
 
-<details>
-<summary><b>⏪ checkout</b> — Restore any past version</summary>
+---
 
-<br/>
+### `checkout` — Go back to any version
 
 ```bash
-promptvc checkout <name> <hash>
-promptvc checkout <name> <hash> --output restored-prompt.txt
+promptvc checkout <prompt-name> <hash>
+promptvc checkout <prompt-name> <hash> --output recovered.txt
 ```
 
-Writes the exact content of that commit to a file. Safe, instant, reversible.
+Instant. Exact. No data loss. The version that worked is always one command away.
 
-</details>
+---
 
-<details>
-<summary><b>📊 status</b> — Inspect the current version</summary>
-
-<br/>
+### `status` — What does my prompt look like right now?
 
 ```bash
-promptvc status <name>
+promptvc status <prompt-name>
 ```
 
 ```
 Prompt:  summarizer
-Latest:  fcfeceb2  —  tighter constraint
+Latest:  a3f92c1b  —  tighter + JSON output
 Model:   gpt-4
-Date:    2024-03-12T10:30:00
+Date:    2024-03-14T11:00:00
 Tags:    prod
 
 Content preview:
 ──────────────────────────────────────────────────
 You are a helpful assistant.
 Be direct. Max 2 sentences.
-Always respond in JSON.
+Always return a JSON object with a single "answer" key.
 ──────────────────────────────────────────────────
 ```
 
-</details>
+---
 
-<details>
-<summary><b>📁 ls</b> — List all tracked prompts</summary>
-
-<br/>
+### `ls` — Everything you've ever tracked
 
 ```bash
 promptvc ls
@@ -227,80 +238,97 @@ promptvc ls
 
 ```
 Tracked prompts:
-  • summarizer     (2 versions)  [fcfeceb2]
-  • classifier     (1 version)   [31e0e29b]
+  • summarizer    (2 versions)  [a3f92c1b]
+  • chatbot       (1 version)   [31e0e29b]
 ```
-
-</details>
-
-<details>
-<summary><b>🏷️ tag</b> — Label an important commit</summary>
-
-<br/>
-
-```bash
-promptvc tag <name> <hash>
-# → Tag label: production
-```
-
-</details>
 
 ---
 
-## How It Works
+### `tag` — Mark what matters
 
-PromptVC stores everything in a single SQLite database at `~/.promptvc/prompts.db`.
+```bash
+promptvc tag <prompt-name> <hash>
+# → Tag label: production-v1
+```
+
+Tag the version that's live in production. Tag the version that passed QA. Tag the version you want to remember. Tags make history navigable.
+
+---
+
+## 🔬 How It Works
+
+PromptVC is deliberately simple. There is no magic.
 
 ```
 ~/.promptvc/
-└── prompts.db        ← your entire prompt history, forever
+└── prompts.db        ← one SQLite file. your entire prompt history.
 ```
 
-Each commit stores the full prompt content, a SHA-256 hash, a message, a model target, tags, and a timestamp. Nothing is ever deleted unless you delete it. No diffs are stored — full snapshots — so you can always reconstruct any version perfectly.
+Every commit stores:
+- The **full prompt content** (not a diff — a complete snapshot)
+- A **SHA-256 hash** (your commit identifier)
+- A **message, model, tags, and timestamp**
 
-**Your data never leaves your machine.** No API calls, no telemetry, no accounts.
+Because we store full snapshots, every version is perfectly reconstructable. Nothing is derived. Nothing can be corrupted. The SQLite file is human-readable with any database viewer.
 
----
-
-## Philosophy
-
-Most tools in the LLM space are built for speed — ship fast, move on. PromptVC is built on a different premise: that prompts are artifacts worth preserving.
-
-A great system prompt can take days to get right. It encodes your intent, your constraints, your understanding of the model's behavior. It is intellectual work. It deserves the same care as the code that calls it.
-
-PromptVC is small, focused, and does one thing well. It will not become a platform. It will not add a dashboard or a subscription tier. It will always be a CLI tool you can understand completely by reading the source in an afternoon.
+**PromptVC makes zero network requests.** It has no telemetry. It does not know you exist. It runs entirely on your machine, forever, even without internet.
 
 ---
 
-## Roadmap
+## 🧠 Philosophy
 
-This is v0.1.0 — the foundation. Planned next:
+PromptVC is built on a simple belief: **prompts are intellectual work, and intellectual work deserves to be preserved.**
 
-- **Branch support** — run parallel prompt experiments without clobbering your main version
-- **Export** — generate a full Markdown changelog of a prompt's evolution
-- **Remote sync** — optional backup to S3 or GitHub Gist
-- **LLM scoring** — automatically evaluate prompt quality across versions using a judge model
+A great system prompt can take days to engineer. It encodes your understanding of a model's behavior, your product's tone, your users' needs, and dozens of small discoveries made through trial and error. It is not disposable. It should not live in a Notion doc with no version history.
+
+This tool will stay small. It will do one thing — version your prompts — and do it perfectly. It will never become a platform. It will never add a subscription. It will never require an account.
+
+PromptVC is a **craftsman's tool.** Built once, built right, useful forever.
 
 ---
 
-## Contributing
+## 🛣️ What's Next
 
-PromptVC is open source and contributions are welcome. The codebase is small and readable — a good place to start.
+PromptVC `v0.1.0` is the foundation — stable, tested, and complete for its core purpose.
+
+Future versions will explore:
+
+- **Branches** — parallel prompt experiments that don't interfere with your main line
+- **Export** — generate a full Markdown changelog of a prompt's evolution over time
+- **Remote backup** — optional sync to S3 or GitHub Gist for team sharing
+- **LLM Judge scoring** — automatically score prompt quality across versions using a judge model
+
+These are planned, not promised. The core will never be broken in service of features.
+
+---
+
+## 🧪 Tests
+
+```bash
+pip install pytest
+pytest tests/ -v
+```
+
+---
+
+## 🤝 Contributing
+
+The codebase is small by design. You can read the entire source in an afternoon. Contributions are welcome — please open an issue before large changes.
 
 ```bash
 git clone https://github.com/yourusername/promptvc
 cd promptvc
 pip install -e .
-python -m pytest tests/
+pytest tests/
 ```
 
-Please open an issue before submitting large changes so we can align on direction.
+Commit style: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`
 
 ---
 
-## License
+## 📄 License
 
-[MIT](LICENSE). Use it, fork it, build on it.
+[MIT](LICENSE) — use it, fork it, build on it, ship it.
 
 ---
 
@@ -308,13 +336,22 @@ Please open an issue before submitting large changes so we can align on directio
 
 <br/>
 
-*Built for the engineers who know that the right prompt*
-*is worth keeping forever.*
+```
+Prompts are not throwaway text.
+They are the interface between human intent and machine intelligence.
+They deserve to be treated that way.
+```
 
 <br/>
 
-**⭐ Star this repo if PromptVC saved a prompt you would have lost.**
+**If PromptVC saved a prompt you would have lost — leave a ⭐**
+
+*It takes 2 seconds and means the world to an open source maintainer.*
 
 <br/>
+
+---
+
+Made with obsession by someone who lost one too many perfect prompts.
 
 </div>
