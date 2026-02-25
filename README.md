@@ -17,8 +17,8 @@
 
 [![PyPI](https://img.shields.io/pypi/v/promptvc?color=blueviolet&style=for-the-badge)](https://pypi.org/project/promptvc/)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/yourusername/promptvc?style=for-the-badge&color=f59e0b&label=⭐%20Stars)](https://github.com/yourusername/promptvc)
+[![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](https://github.com/Youssef-osama33/promptvc/blob/main/LICENSE)
+[![Stars](https://img.shields.io/github/stars/Youssef-osama33/promptvc?style=for-the-badge&color=f59e0b&label=⭐%20Stars)](https://github.com/Youssef-osama33/promptvc/stargazers)
 
 <br/>
 
@@ -80,15 +80,15 @@ No cloud. No account. No SaaS. Just a clean CLI and a SQLite file that lives on 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                                                                     │
-│  $ promptvc commit gpt-summarizer prompt.txt -m "nailed the tone"  │
-│  ✓ Committed [a3f92c1b] nailed the tone                            │
+│  $ promptvc commit summarizer prompt.txt -m "initial version"       │
+│  ✓ Committed [a3f92c1b] initial version                             │
 │                                                                     │
-│  $ promptvc diff gpt-summarizer a3f92c1b fcfeceb2                  │
-│  - Answer in 3 sentences max.                                       │
-│  + Be direct. 2 sentences. Return JSON.                             │
+│  $ promptvc status summarizer                                       │
+│  Latest:  a3f92c1b  —  initial version                              │
+│  Model:   gpt-4                                                     │
 │                                                                     │
-│  $ promptvc checkout gpt-summarizer a3f92c1b                       │
-│  ✓ Checked out [a3f92c1b] → gpt-summarizer.txt                     │
+│  $ promptvc checkout summarizer a3f92c1b                            │
+│  ✓ Checked out [a3f92c1b] → summarizer.txt                          │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
 ```
@@ -114,20 +114,19 @@ Zero configuration. Works immediately. Your history is stored at `~/.promptvc/pr
 echo "You are a helpful assistant. Answer in 3 sentences max." > prompt.txt
 
 # 2. Commit it — like Git, but for prompts
-promptvc commit summarizer prompt.txt -m "initial draft" --model gpt-4
+promptvc commit summarizer prompt.txt -m "initial version" --model gpt-4
 
-# 3. Iterate
-echo "You are a helpful assistant. Be direct. Max 2 sentences. Return JSON." > prompt.txt
-promptvc commit summarizer prompt.txt -m "tighter + JSON output" --model gpt-4
+# 3. Check its status anytime
+promptvc status summarizer
 
-# 4. See exactly what changed between versions
-promptvc diff summarizer <hash_1> <hash_2>
+# 4. See your full history
+promptvc log summarizer
 
-# 5. Something broke? Go back instantly.
-promptvc checkout summarizer <hash_1>
+# 5. Restore it anytime
+promptvc checkout summarizer <hash>
 ```
 
-That's the whole loop. **Write → Commit → Iterate → Diff → Recover.**
+That's the whole loop. **Write → Commit → Track → Recover.**
 
 ---
 
@@ -142,9 +141,8 @@ promptvc commit <prompt-name> <file> -m "your message" [--model gpt-4] [--tags p
 Think of this like `git commit`. Every time you reach a version worth keeping — commit it. You'll thank yourself later.
 
 ```bash
-promptvc commit summarizer prompt.txt -m "initial draft"
-promptvc commit summarizer prompt.txt -m "add JSON constraint" --model gpt-4 --tags "prod"
-promptvc commit chatbot system.txt   -m "softer persona"   --model claude-3
+promptvc commit summarizer prompt.txt -m "initial version"
+promptvc commit chatbot system.txt -m "first draft" --model claude-3 --tags "v1"
 ```
 
 ---
@@ -159,35 +157,28 @@ promptvc log <prompt-name>
 commit a3f92c1b9e4d2f7a8c3b1e6d9f0a2c5b
 Model:   gpt-4
 Date:    2024-03-14T11:00:00
-Tags:    prod
 
-    tighter + JSON output
-
-commit 31e0e29bfd18a7c43d85f920b1c6e471
-Model:   gpt-4
-Date:    2024-03-12T09:30:00
-
-    initial draft
+    initial version
 ```
 
 Every decision, recorded. Every message a breadcrumb back to what you were thinking.
 
 ---
 
-### `diff` — See exactly what changed
+### `diff` — See exactly what changed between any two versions
 
 ```bash
 promptvc diff <prompt-name> <hash_a> <hash_b>
 ```
 
 ```diff
---- version 31e0e29b  (initial draft)
-+++ version a3f92c1b  (tighter + JSON output)
+--- version 31e0e29b
++++ version a3f92c1b
 
   You are a helpful assistant.
 - Answer in 3 sentences max.
 + Be direct. Max 2 sentences.
-+ Always return a JSON object with a single "answer" key.
++ Always return a JSON object.
 
   +2 lines  -1 lines  1 unchanged
 ```
@@ -215,16 +206,14 @@ promptvc status <prompt-name>
 
 ```
 Prompt:  summarizer
-Latest:  a3f92c1b  —  tighter + JSON output
+Latest:  a3f92c1b  —  initial version
 Model:   gpt-4
 Date:    2024-03-14T11:00:00
-Tags:    prod
 
 Content preview:
 ──────────────────────────────────────────────────
 You are a helpful assistant.
-Be direct. Max 2 sentences.
-Always return a JSON object with a single "answer" key.
+Answer in 3 sentences max.
 ──────────────────────────────────────────────────
 ```
 
@@ -238,8 +227,7 @@ promptvc ls
 
 ```
 Tracked prompts:
-  • summarizer    (2 versions)  [a3f92c1b]
-  • chatbot       (1 version)   [31e0e29b]
+  • summarizer    (1 version)   [a3f92c1b]
 ```
 
 ---
@@ -251,7 +239,7 @@ promptvc tag <prompt-name> <hash>
 # → Tag label: production-v1
 ```
 
-Tag the version that's live in production. Tag the version that passed QA. Tag the version you want to remember. Tags make history navigable.
+Tag the version that's live in production. Tag the version that passed QA. Tags make history navigable.
 
 ---
 
@@ -269,9 +257,27 @@ Every commit stores:
 - A **SHA-256 hash** (your commit identifier)
 - A **message, model, tags, and timestamp**
 
-Because we store full snapshots, every version is perfectly reconstructable. Nothing is derived. Nothing can be corrupted. The SQLite file is human-readable with any database viewer.
+Because we store full snapshots, every version is perfectly reconstructable. Nothing is derived. Nothing can be corrupted. The SQLite file is readable with any database viewer.
 
 **PromptVC makes zero network requests.** It has no telemetry. It does not know you exist. It runs entirely on your machine, forever, even without internet.
+
+---
+
+## 🗂️ Project Structure
+
+```
+promptvc/
+├── promptvc/
+│   ├── __init__.py       # v0.1.0
+│   ├── cli.py            # all CLI commands (click)
+│   ├── store.py          # SQLite storage backend
+│   ├── differ.py         # line-by-line diff engine
+│   └── display.py        # colorized terminal output
+├── tests/
+│   └── test_core.py
+├── setup.py
+└── README.md
+```
 
 ---
 
@@ -316,7 +322,7 @@ pytest tests/ -v
 The codebase is small by design. You can read the entire source in an afternoon. Contributions are welcome — please open an issue before large changes.
 
 ```bash
-git clone https://github.com/yourusername/promptvc
+git clone https://github.com/Youssef-osama33/promptvc
 cd promptvc
 pip install -e .
 pytest tests/
@@ -328,7 +334,7 @@ Commit style: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`
 
 ## 📄 License
 
-[MIT](LICENSE) — use it, fork it, build on it, ship it.
+[MIT](https://github.com/Youssef-osama33/promptvc/blob/main/LICENSE) — use it, fork it, build on it, ship it.
 
 ---
 
@@ -352,6 +358,6 @@ They deserve to be treated that way.
 
 ---
 
-Made with obsession by someone who lost one too many perfect prompts.
+Made with obsession by [Youssef Osama](https://github.com/Youssef-osama33).
 
 </div>
