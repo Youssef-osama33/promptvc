@@ -25,7 +25,7 @@
 <br/>
 
 ```bash
-pip install promptvc
+pip install llm-promptvc
 ```
 
 <br/>
@@ -100,7 +100,7 @@ No cloud. No account. No SaaS. Just a clean CLI and a SQLite file that lives on 
 ## ⚡ Installation
 
 ```bash
-pip install promptvc
+pip install llm-promptvc
 ```
 
 Zero configuration. Works immediately. Your history is stored at `~/.promptvc/prompts.db` — a plain SQLite file you own completely.
@@ -267,19 +267,29 @@ Because we store full snapshots, every version is perfectly reconstructable. Not
 
 ## 🗂️ Project Structure
 
+PromptVC is intentionally minimal. Every file has a single responsibility. No file exceeds what it needs to be.
+
 ```
-promptvc/
-├── promptvc/
-│   ├── __init__.py       # v0.1.0
-│   ├── cli.py            # all CLI commands (click)
-│   ├── store.py          # SQLite storage backend
-│   ├── differ.py         # line-by-line diff engine
-│   └── display.py        # colorized terminal output
+promptvc/                        ← root
+│
+├── promptvc/                    ← the library (importable, testable, pip-installable)
+│   ├── __init__.py              ← package entry point — exposes version string only
+│   ├── cli.py                   ← all user-facing commands via Click; pure I/O, no logic
+│   ├── store.py                 ← SQLite persistence layer; the only file that touches disk
+│   ├── differ.py                ← stateless diff engine; pure functions, zero side effects
+│   └── display.py               ← terminal rendering; colorized output via Click styling
+│
 ├── tests/
-│   └── test_core.py
-├── setup.py
-└── README.md
+│   └── test_core.py             ← full coverage of store + differ; CLI tested via CliRunner
+│
+├── setup.py                     ← package metadata + `promptvc` console script entrypoint
+└── README.md                    ← you are here
 ```
+
+**The architecture follows one rule:** the CLI knows nothing about storage, the storage knows nothing about diffing, and the differ knows nothing about display. Each layer is independently testable and replaceable.
+
+> `cli.py` calls `store.py`. `store.py` owns SQLite. `differ.py` is pure Python. `display.py` handles output.
+> Nothing else. No circular imports. No shared state. No surprises.
 
 ---
 
