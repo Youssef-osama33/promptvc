@@ -1,5 +1,8 @@
 <div align="center">
-
+<p align="center">
+  <img src="banar-promptvc.jpg" alt="PromptVC Logo" width="200">
+</p>
+    
 <br/>
 
 ```
